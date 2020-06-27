@@ -15,7 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	AFloater();
 
-	UPROPERTY(VisibleAnywhere, Category = "ActorMeshComponents");
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ActorMeshComponents");
 	UStaticMeshComponent* StaticMesh;
 
 	// Location used by SetActorLocation() when BeginPlay() is called
@@ -25,6 +25,15 @@ public:
 	// Location of the actor when dragged in from the editor
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "FloaterVariables")
 	FVector PlacedLocation;
+
+	UPROPERTY(VisibleDefaultsOnly, BluePrintReadOnly, Category = "FloaterVariables")
+	FVector WorldOrigin;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FloaterVariables")
+	FVector InitialDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FloaterVariables")
+	bool bShouldFloat;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FloaterVariables")
 	bool bInitializeFloaterLocations;

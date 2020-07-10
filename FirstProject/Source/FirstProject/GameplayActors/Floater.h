@@ -14,7 +14,7 @@ class FIRSTPROJECT_API AFloater : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFloater();
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ActorMeshComponents");
 	UStaticMeshComponent* StaticMesh;
 
@@ -44,6 +44,28 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "FloaterVariables")
 	FVector InitialTorque;
 
+	// Amplitude 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FloaterVariables")
+	float A;
+
+	// Period = 2 * PI / ABS (B)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FloaterVariables")
+	float B;
+
+	// Phase shift = C / B
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FloaterVariables")
+	float C;
+
+	// Vertical shift 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FloaterVariables")
+	float D;
+
+
+private:
+	// 
+	float RunningTime;
+	float BaseZLocation;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

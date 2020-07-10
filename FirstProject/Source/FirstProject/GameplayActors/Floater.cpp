@@ -2,6 +2,7 @@
 
 
 #include "Floater.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 AFloater::AFloater()
@@ -17,8 +18,11 @@ AFloater::AFloater()
 
 	InitialDirection = FVector(0.0f, 0.0f, 0.0f);
 
-	bInitializeFloaterLocations = false;
+	bInitializeFloaterLocations = true;
 	bShouldFloat = false;
+
+	InitialForce = FVector(2000000.0f, 0.0f, 0.0f);
+	InitialTorque = FVector(200000.0f, 0.0f, 0.0f);
 }
 
 
@@ -27,17 +31,26 @@ void AFloater::BeginPlay()
 {
 	Super::BeginPlay();
 
+	float InitialX = FMath::FRandRange(-500.f, 500.f);
+	float InitialY = FMath::FRandRange(-500.f, 500.f);
+	float InitialZ = FMath::FRandRange(0.f, 500.f);
+
+	InitialLocation.X = InitialX;
+	InitialLocation.Y = InitialY;
+	InitialLocation.Z = InitialZ;
+
 	PlacedLocation = GetActorLocation();
 
-	if (bInitializeFloaterLocations) 
+	if (bInitializeFloaterLocations)  
 	{
 		SetActorLocation(InitialLocation);
 	}
 
-	FHitResult HitResult;
-
-	FVector LocalOffset = FVector(200.0f, 0.0f, 0.0f);
+	// FVector InitialForce = FVector(2000000.0f, 0.0f, 0.0f);
 	// AddActorWorldOffset(LocalOffset, true, &HitResult);
+	// StaticMesh->AddForce(InitialForce);
+	// StaticMesh->AddTorque(InitialTorque);
+
 
 
 
@@ -56,7 +69,7 @@ void AFloater::Tick(float DeltaTime)
 		FVector HitLocation = HitResult.Location;
 	}
 
-	FRotator Rotation = FRotator(0.0f, 1.0f, 0.0f);
-	AddActorWorldRotation(Rotation);
+	// FRotator Rotation = FRotator(0.0f, 1.0f, 0.0f);
+	// AddActorWorldRotation(Rotation);
 }
 

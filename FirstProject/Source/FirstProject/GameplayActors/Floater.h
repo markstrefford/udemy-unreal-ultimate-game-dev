@@ -14,7 +14,7 @@ class FIRSTPROJECT_API AFloater : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFloater();
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ActorMeshComponents");
 	UStaticMeshComponent* StaticMesh;
 
@@ -38,6 +38,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FloaterVariables")
 	bool bInitializeFloaterLocations;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "FloaterVariables")
+	FVector InitialForce;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "FloaterVariables")
+	FVector InitialTorque;
 
 protected:
 	// Called when the game starts or when spawned

@@ -29,7 +29,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 	class UStaticMeshComponent* MeshComponent;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Mesh")
 	class UCameraComponent* Camera;
+
+private:
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+
+	FVector CurrentVelocity;
+	float MaxSpeed;
 
 };

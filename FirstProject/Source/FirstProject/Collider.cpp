@@ -43,11 +43,10 @@ ACollider::ACollider()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 
-	OurMovementComponent = CreateDefaultSubobject<UColliderMovementComponent>(TEXT("OurMovementComponent"));
-	OurMovementComponent->UpdatedComponent = RootComponent;
-
 	OurMovementComponent = CreateDefaultSubobject<UColliderMovementComponent>(TEXT("MovementComponent"));
 	OurMovementComponent->UpdatedComponent = RootComponent;
+
+	CameraInput = FVector2D(0.f, 0.f);
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -64,6 +63,14 @@ void ACollider::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FRotator NewRotation = GetActorRotation();
+	NewRotation.Yaw += CameraInput.X;
+	SetActorRotation(NewRotation);
+
+	FRotator NewSpringArmRotation = SpringArm->GetComponentRotation();
+	NewSpringArmRotation.Pitch = FMath::Clamp(NewSpringArmRotation.Pitch += CameraInput.Y, -80.f, -15.f);
+	SpringArm->SetWorldRotation(NewSpringArmRotation);
+
 }
 
 // Called to bind functionality to input
@@ -71,9 +78,11 @@ void ACollider::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ACollider::MoveForward );
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ACollider::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ACollider::MoveRight);
 
+	PlayerInputComponent->BindAxis(TEXT("CameraPitch"), this, &ACollider::PitchCamera);
+	PlayerInputComponent->BindAxis(TEXT("CameraYaw"), this, &ACollider::YawCamera);
 }
 
 void ACollider::MoveForward(float input)
@@ -82,9 +91,6 @@ void ACollider::MoveForward(float input)
 	FVector Forward = GetActorForwardVector();
 	if (OurMovementComponent)
 	{
-		// FVector ForwardVector = Forward * input;
-		// UE_LOG(LogTemp, Warning, TEXT("ForwardVector=%s, input=%f"), *ForwardVector.ToString(), input)
-		// OurMovementComponent->AddInputVector(ForwardVector);
 		OurMovementComponent->AddInputVector(Forward * input);
 	}
 }
@@ -95,14 +101,22 @@ void ACollider::MoveRight(float input)
 	FVector Right = GetActorRightVector();
 	if (OurMovementComponent)
 	{
-		// FVector RightVector = Right * input;
-		// UE_LOG(LogTemp, Warning, TEXT("RightVector=%s, input=%f"), *RightVector.ToString(), input)
-		// OurMovementComponent->AddInputVector(RightVector);
 		OurMovementComponent->AddInputVector(Right * input);
 	}
 }
+
+void ACollider::YawCamera(float AxisValue)
+{
+	CameraInput.X = AxisValue;
+}
+
+void ACollider::PitchCamera(float AxisValue)
+{
+	CameraInput.Y = AxisValue;
+}	
 
 UPawnMovementComponent* ACollider::GetMovementComponent() const 
 {
 	return OurMovementComponent;
 }
+

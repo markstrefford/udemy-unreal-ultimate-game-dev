@@ -71,27 +71,33 @@ void ACollider::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MovForward"), this, &ACollider::MoveForward );
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ACollider::MoveForward );
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ACollider::MoveRight);
 
 }
 
 void ACollider::MoveForward(float input)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MoveForward!"))
+	// UE_LOG(LogTemp, Warning, TEXT("MoveForward!"))
 	FVector Forward = GetActorForwardVector();
 	if (OurMovementComponent)
 	{
+		// FVector ForwardVector = Forward * input;
+		// UE_LOG(LogTemp, Warning, TEXT("ForwardVector=%s, input=%f"), *ForwardVector.ToString(), input)
+		// OurMovementComponent->AddInputVector(ForwardVector);
 		OurMovementComponent->AddInputVector(Forward * input);
 	}
 }
 
 void ACollider::MoveRight(float input)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MoveRight!"))
+	// UE_LOG(LogTemp, Warning, TEXT("MoveRight!"))
 	FVector Right = GetActorRightVector();
 	if (OurMovementComponent)
 	{
+		// FVector RightVector = Right * input;
+		// UE_LOG(LogTemp, Warning, TEXT("RightVector=%s, input=%f"), *RightVector.ToString(), input)
+		// OurMovementComponent->AddInputVector(RightVector);
 		OurMovementComponent->AddInputVector(Right * input);
 	}
 }

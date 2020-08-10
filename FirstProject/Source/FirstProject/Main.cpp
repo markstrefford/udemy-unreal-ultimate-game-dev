@@ -4,6 +4,8 @@
 #include "Main.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/world.h"
+
 
 // Sets default values
 AMain::AMain()
@@ -48,10 +50,25 @@ void AMain::Tick(float DeltaTime)
 void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	check(PlayerInputComponent);
+
+	// Jump comes from ACharacter!
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMain::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMain::MoveRight);
+
+	// These are provided by Pawn so don't need to add our own functions!
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAxis("TurnRate", this, &AMain::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AMain::LookUpAtRate);
 
 }
 
-void MoveForward(float Value)
+void AMain::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.f))
 	{
@@ -60,12 +77,12 @@ void MoveForward(float Value)
 		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value)
+		AddMovementInput(Direction, Value);
 
 	}
 }
 
-void MoveRight(float Value)
+void AMain::MoveRight(float Value)
 {
 if ((Controller != nullptr) && (Value != 0.f))
 	{
@@ -74,7 +91,18 @@ if ((Controller != nullptr) && (Value != 0.f))
 		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, Value)
+		AddMovementInput(Direction, Value);
 
 	}
+}
+
+void AMain::TurnAtRate(float Rate)
+{
+	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AMain::LookUpAtRate(float Rate)
+{
+	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+
 }

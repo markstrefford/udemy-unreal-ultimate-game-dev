@@ -24,7 +24,9 @@ AMain::AMain()
 	// Let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; 	
 
-
+	// Set out turn rates for input
+	BaseTurnRate = 65.f;
+	BaseLookUpRate = 65.f;
 
 }
 
@@ -49,3 +51,30 @@ void AMain::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void MoveForward(float Value)
+{
+	if ((Controller != nullptr) && (Value != 0.f))
+	{
+		// Find out which way is forward (controller attached to the swing arm!)
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value)
+
+	}
+}
+
+void MoveRight(float Value)
+{
+if ((Controller != nullptr) && (Value != 0.f))
+	{
+		// Find out which way is forward (controller attached to the swing arm!)
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, Value)
+
+	}
+}

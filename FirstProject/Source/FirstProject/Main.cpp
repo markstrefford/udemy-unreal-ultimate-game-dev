@@ -43,7 +43,7 @@ AMain::AMain()
 
 	// Configure character movement to face the direction he's moving
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.f, 0.0f);  // Yaw = 540.f, speed of ratation when aligning rotation to movement directioin
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 640.f, 0.0f);  // Yaw = speed of ratation when aligning rotation to movement directioin
 	GetCharacterMovement()->JumpZVelocity = 650.f; 	// How high he jumps!
 	GetCharacterMovement()->AirControl = 0.2f;   // Some air controls, not a lot!
 }

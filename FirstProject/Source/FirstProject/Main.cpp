@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/world.h"
+#include "Components/CapsuleComponent.h"
 
 
 // Sets default values
@@ -19,6 +20,9 @@ AMain::AMain()
 	CameraBoom->TargetArmLength = 600.f;			// Camera follows at this distance
 	CameraBoom->bUsePawnControlRotation = true;		// Rotate arm based on controller (controller attached to the pawn) so we can look around
 
+	// Set size for collision capsule. Video says (48.f, 150.f)??
+	GetCapsuleComponent()->SetCapsuleSize(50.f, 105.f);
+
 	// Create follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -29,6 +33,12 @@ AMain::AMain()
 	// Set out turn rates for input
 	BaseTurnRate = 65.f;
 	BaseLookUpRate = 65.f;
+
+	// Don't rotate when the controller rotates
+	// Let that just affect the camera
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
 
 }
 

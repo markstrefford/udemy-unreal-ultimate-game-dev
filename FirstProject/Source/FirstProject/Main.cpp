@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Engine/world.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -40,6 +41,11 @@ AMain::AMain()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 
+	// Configure character movement to face the direction he's moving
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.f, 0.0f);  // Yaw = 540.f, speed of ratation when aligning rotation to movement directioin
+	GetCharacterMovement()->JumpZVelocity = 650.f; 	// How high he jumps!
+	GetCharacterMovement()->AirControl = 0.2f;   // Some air controls, not a lot!
 }
 
 // Called when the game starts or when spawned

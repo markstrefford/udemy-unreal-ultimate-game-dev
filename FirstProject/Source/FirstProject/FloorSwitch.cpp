@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FloorSwitch.h
+#include "FloorSwitch.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
@@ -14,8 +14,13 @@ AFloorSwitch::AFloorSwitch()
 	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
 	RootComponent = TriggerBox;
 
-	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AFloorSwitch::OnOverlapBegin);
-	TriggerBox->OnComponentEndOverlap.AddDynamic(this, &AFloorSwitch::OnOverlapEnd)
+	/** Works for overlaps, not computationally expensive! */
+	TriggerBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	TriggerBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+	TriggerBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	TriggerBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	TriggerBox->SetBoxExtent(FVector(62.f, 62.f, 32.f));
+
 	FloorSwitch = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FloorSwitch"));
 	FloorSwitch->SetupAttachment(GetRootComponent());
 
@@ -28,6 +33,10 @@ AFloorSwitch::AFloorSwitch()
 void AFloorSwitch::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/** Better to be here as engine ready. In constructor is potentially too early! */
+	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AFloorSwitch::OnOverlapBegin);
+	TriggerBox->OnComponentEndOverlap.AddDynamic(this, &AFloorSwitch::OnOverlapEnd);
 	
 }
 
@@ -40,10 +49,11 @@ void AFloorSwitch::Tick(float DeltaTime)
 
 void AFloorSwitch::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Overlap Begin"));
 }
 
 void AFloorSwitch::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	
+	UE_LOG(LogTemp, Warning, TEXT("Overlap End"));
+
 }
